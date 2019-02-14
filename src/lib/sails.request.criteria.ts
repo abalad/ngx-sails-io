@@ -74,7 +74,7 @@ export class RequestCriteria {
     }
 
     public whereStartsWith(key: string, value: string): RequestCriteria {
-        if (isString(this.criteria[key])) {
+        if (isUndefined(this.criteria[key]) || isString(this.criteria[key])) {
             this.criteria[key] = { 'startsWith': value };
             return this;
         }
