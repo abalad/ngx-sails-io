@@ -39,14 +39,18 @@ export class SailsResource<T extends SailsModelInterface> {
       .findOne( ( entity as T).id || entity as string );
   }
 
-  create(entity: T): Observable<T> {
-    return new SailsQuery<T>(this.sails, this.modelClass ).save(
+  create(entity: T, params: ResourceFindOneParams<T> = new ResourceFindOneParams<T>()): Observable<T> {
+    return new SailsQuery<T>(this.sails, this.modelClass )
+      .setPopulation( ...params.population || this.population )
+      .save(
       SailsModel.unserialize(this.modelClass, entity) as T
     );
   }
 
-  update(entity: T): Observable<T> {
-    return new SailsQuery<T>(this.sails, this.modelClass).update( entity.id, entity );
+  update(entity: T, params: ResourceFindOneParams<T> = new ResourceFindOneParams<T>()): Observable<T> {
+    return new SailsQuery<T>(this.sails, this.modelClass)
+      .setPopulation( ...params.population || this.population )
+      .update( entity.id, entity );
   }
 
   destroy() {}
