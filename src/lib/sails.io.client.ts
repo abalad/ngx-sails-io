@@ -19,6 +19,7 @@ export declare namespace SailsIOClient {
         interface Event {
             verb: any;
             id: any;
+            previous: object;
             data: object;
         }
     }

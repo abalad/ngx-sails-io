@@ -39,6 +39,10 @@ export class SailsEvent {
         return this.JWR.data;
     }
 
+    public getPrevious(): object {
+      return this.JWR.previous;
+    }
+
     public getId(): string | number {
         return this.JWR.id;
     }
