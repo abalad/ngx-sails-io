@@ -174,7 +174,8 @@ export class Sails implements SailsInterceptorInterface, SailsInterceptorHandler
                 const response = new SailsResponse(jwr);
 
                 if ( response.isError() ) {
-                return obs.error(response.getBody());
+                  this.debugReqRes(request, response);
+                  return obs.error(response.getBody());
                 }
 
                 obs.next(response);
