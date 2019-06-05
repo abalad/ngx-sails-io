@@ -96,6 +96,13 @@ export class SailsResource<T extends SailsModelInterface> {
     );
   }
 
+  onDestroyed(): Observable<any> {
+    return (new SailsSubscription(this.sails)).on( this.getEventName() ).pipe(
+        filter( ( event: SailsEvent ) => event.isDestroyed() ),
+        map( ( event: SailsEvent ) => event.getPrevious() )
+    );
+  }
+
   private getEventName() {
     return ( new this.modelClass() ).getEndPoint();
   }
