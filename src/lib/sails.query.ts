@@ -45,47 +45,56 @@ export class SailsQuery<T extends SailsModelInterface> {
         );
     }
 
-    public populate<U extends SailsModelInterface>(id: string, association: new() => U = null ): Observable<U[]> {
-      const associationModel = new association();
-      const assosiationModelClass = association;
-
-      this.request.addParam('where', this.getRequestCriteria());
-      return this.request.get(`/${this.model.getEndPoint()}/${id}/${associationModel.getEndPoint()}`).pipe(
-        map((res: SailsResponse) => {
-          if (res.isOk()) {
-            return SailsModel.unserialize<U>(assosiationModelClass, res.getData()) as U[];
-          }
-          throw res;
-        })
-      );
-    }
-
-    public save(model: T): Observable<T> {
+    public create(model: T): Observable<T> {
         if (!(model instanceof this.modelClass)) {
             throw new TypeError(this.errorMsg);
         }
 
         const data = SailsModel.serialize(model);
         const url = `/${model.getEndPoint()}`;
-        if (model.id === null || model.id === '') {
-            return this.request.post(url, data).pipe(
-                map(( res: SailsResponse ) => {
-                    if (res.isOk()) {
-                        return SailsModel.unserialize<T>(this.modelClass, res.getData()) as T;
-                    }
-                    throw res;
-                })
-            );
-        } else {
-            return this.request.put(url.concat('/', model.id), data).pipe(
-                map(( res: SailsResponse ) => {
-                    if (res.isOk()) {
-                        return SailsModel.unserialize<T>(this.modelClass, res.getData()) as T;
-                    }
-                    throw res;
-                })
-            );
+        return this.request.post(url, data).pipe(
+            map(( res: SailsResponse ) => {
+                if (res.isOk()) {
+                    return SailsModel.unserialize<T>(this.modelClass, res.getData()) as T;
+                }
+                throw res;
+            })
+        );
+    }
+
+    public add<U extends SailsModelInterface>( id: string, fk: string, association: new() => U = null ): Observable<T> {
+        const associationModel = new association();
+        const endpoint = associationModel.getEndPoint();
+
+        return this.request.put(`/${this.model.getEndPoint()}/${id}/${endpoint}/${fk}`, {}).pipe(
+            map(( res: SailsResponse ) => {
+                if (res.isOk()) {
+                    return SailsModel.unserialize<T>(this.modelClass, res.getData()) as T;
+                }
+                throw res;
+            })
+        );
+    }
+
+    public replace<U extends SailsModelInterface>( id: string, model: Partial<T>, association: new() => U = null ): Observable<T> {
+        if (model.createdAt) {
+            delete model.createdAt;
         }
+        if (model.updatedAt) {
+            delete model.updatedAt;
+        }
+        const associationModel = new association();
+        const data = model instanceof SailsModel ? SailsModel.serialize(model) : Object.assign({}, model);
+        const endpoint = associationModel.getEndPoint();
+
+        return this.request.put(`/${this.model.getEndPoint()}/${id}/${endpoint}`, data[endpoint]).pipe(
+            map(( res: SailsResponse ) => {
+                if (res.isOk()) {
+                    return SailsModel.unserialize<T>(this.modelClass, res.getData()) as T;
+                }
+                throw res;
+            })
+        );
     }
 
     public update(id: string, model: Partial<T>): Observable<T> {
@@ -106,6 +115,45 @@ export class SailsQuery<T extends SailsModelInterface> {
         );
     }
 
+    public destroy(id: string): Observable<T> {
+        return this.request.delete(`/${this.model.getEndPoint()}/${id}`).pipe(
+            map(( res: SailsResponse ) => {
+                if (res.isOk()) {
+                    return SailsModel.unserialize<T>(this.modelClass, res.getData()) as T;
+                }
+                throw res;
+            })
+        );
+    }
+
+
+    public remove<U extends SailsModelInterface>(id: string, fk: string, association: new() => U = null): Observable<T> {
+        const associationModel = new association();
+        return this.request.delete(`/${this.model.getEndPoint()}/${id}/${associationModel.getEndPoint()}/${fk}`).pipe(
+            map(( res: SailsResponse ) => {
+                if (res.isOk()) {
+                    return SailsModel.unserialize<T>(this.modelClass, res.getData()) as T;
+                }
+                throw res;
+            })
+        );
+    }
+
+    public populate<U extends SailsModelInterface>(id: string, association: new() => U = null ): Observable<U[]> {
+      const associationModel = new association();
+      const assosiationModelClass = association;
+
+      this.request.addParam('where', this.getRequestCriteria());
+      return this.request.get(`/${this.model.getEndPoint()}/${id}/${associationModel.getEndPoint()}`).pipe(
+        map((res: SailsResponse) => {
+          if (res.isOk()) {
+            return SailsModel.unserialize<U>(assosiationModelClass, res.getData()) as U[];
+          }
+          throw res;
+        })
+      );
+    }
+
     public restore(id: string, model: Partial<T>): Observable<T> {
       if (model.createdAt) {
         delete model.createdAt;
@@ -122,38 +170,6 @@ export class SailsQuery<T extends SailsModelInterface> {
           throw res;
         })
       );
-    }
-
-    public replace<U extends SailsModelInterface>( id: string, model: Partial<T>, association: new() => U = null ): Observable<T> {
-      if (model.createdAt) {
-        delete model.createdAt;
-      }
-      if (model.updatedAt) {
-        delete model.updatedAt;
-      }
-      const associationModel = new association();
-      const data = model instanceof SailsModel ? SailsModel.serialize(model) : Object.assign({}, model);
-      const endpoint = associationModel.getEndPoint();
-
-      return this.request.put(`/${this.model.getEndPoint()}/${id}/${endpoint}`, data[endpoint]).pipe(
-        map(( res: SailsResponse ) => {
-          if (res.isOk()) {
-            return SailsModel.unserialize<T>(this.modelClass, res.getData()) as T;
-          }
-          throw res;
-        })
-      );
-    }
-
-    public remove(id: string): Observable<T> {
-        return this.request.delete(`/${this.model.getEndPoint()}/${id}`).pipe(
-            map(( res: SailsResponse ) => {
-                if (res.isOk()) {
-                    return SailsModel.unserialize<T>(this.modelClass, res.getData()) as T;
-                }
-                throw res;
-            })
-        );
     }
 
     public setLimit(limit: number  = -1): this {

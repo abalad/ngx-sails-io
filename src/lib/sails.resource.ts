@@ -42,9 +42,15 @@ export class SailsResource<T extends SailsModelInterface> {
   create(entity: T, params: ResourceFindOneParams<T> = new ResourceFindOneParams<T>()): Observable<T> {
     return new SailsQuery<T>(this.sails, this.modelClass )
       .setPopulation( ...params.population || this.population )
-      .save(
-      SailsModel.unserialize(this.modelClass, entity) as T
-    );
+      .create( SailsModel.unserialize(this.modelClass, entity) as T );
+  }
+
+  add<U extends SailsModelInterface>(entity: T, entityFK: T,
+                                     params: ResourceFindOneParams<T> = new ResourceFindOneParams<T>(),
+                                     association: new() => U = null): Observable<T> {
+    return new SailsQuery<T>(this.sails, this.modelClass)
+        .setPopulation( ...params.population || this.population )
+        .add( entity.id, entityFK.id, association );
   }
 
   update(entity: T, params: ResourceFindOneParams<T> = new ResourceFindOneParams<T>()): Observable<T> {
@@ -53,22 +59,22 @@ export class SailsResource<T extends SailsModelInterface> {
       .update( entity.id, entity );
   }
 
-  destroy() {}
+  replace<U extends SailsModelInterface>(entity: T, association: new() => U = null): Observable<T> {
+    return new SailsQuery<T>(this.sails, this.modelClass)
+        .replace( entity.id, entity, association );
+  }
+
+  destroy( entity: T ) {
+    return new SailsQuery<T>(this.sails, this.modelClass).destroy( entity.id );
+  }
 
   populate<U extends SailsModelInterface>(entity: T, assosiation: new() => U ): Observable<U[]> {
     return new SailsQuery<T>( this.sails,  this.modelClass  )
       .populate( entity.id, assosiation );
   }
 
-  add() {}
-
-  remove(entity: T): Observable<any> {
-    return new SailsQuery<T>(this.sails, this.modelClass).remove( entity.id );
-  }
-
-  replace<U extends SailsModelInterface>(entity: T, association: new() => U = null): Observable<T> {
-    return new SailsQuery<T>(this.sails, this.modelClass)
-      .replace( entity.id, entity, association );
+  remove<U extends SailsModelInterface>(entity: T, entityfk: U, association: new() => U = null): Observable<any> {
+    return new SailsQuery<T>(this.sails, this.modelClass).remove( entity.id, entityfk.id, association );
   }
 
   restore(entity: T): Observable<any> {
