@@ -60,6 +60,11 @@ export declare namespace SailsIOClient {
         headers?: Headers;
     }
 
+    interface ResponseMeta<T> {
+      data?: T;
+      meta?: object;
+    }
+
     type EventCallback = (response) => void;
 
     type ResponseCallback = (body: any, JWR: JWR.Response) => void;

@@ -6,6 +6,8 @@ import { RequestCriteria } from './sails.request.criteria';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { SailsResponse } from './sails.response';
+import { SailsIOClient } from './sails.io.client';
+import ResponseMeta = SailsIOClient.ResponseMeta;
 
 export class SailsQuery<T extends SailsModelInterface> {
     private model: T;
@@ -21,11 +23,17 @@ export class SailsQuery<T extends SailsModelInterface> {
         this.model = new modelClass();
     }
 
-    public find(): Observable<T[]> {
+    public find( meta: boolean = false ): Observable<T[] | ResponseMeta<T[]> > {
         this.request.addParam('where', this.getRequestCriteria());
         return this.request.get(`/${this.model.getEndPoint()}`).pipe(
             map((res: SailsResponse) => {
                 if (res.isOk()) {
+                    if ( meta ) {
+                      return Object.defineProperty(res.getBody(), 'data', {
+                        writable: true,
+                        value: SailsModel.unserialize<T>(this.modelClass, res.getData()) as T[]
+                      });
+                    }
                     return SailsModel.unserialize<T>(this.modelClass, res.getData()) as T[];
                 }
                 throw res;
@@ -203,6 +211,13 @@ export class SailsQuery<T extends SailsModelInterface> {
     public setRequestCriteria(criteria: RequestCriteria = null): this {
         this.criteria = criteria;
         return this;
+    }
+
+    public setCount(count: boolean = false): this {
+      if ( count !== null) {
+        this.request.addParam('count', count);
+      }
+      return this;
     }
 
     private getRequestCriteria(): RequestCriteria {

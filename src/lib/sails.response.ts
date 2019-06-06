@@ -39,6 +39,10 @@ export class SailsResponse {
         return this.getStatusCode() >= 500;
     }
 
+    public getJWR(): any {
+      return this.JWR;
+    }
+
     public getCode(): string {
         return this.getBody().code;
     }
