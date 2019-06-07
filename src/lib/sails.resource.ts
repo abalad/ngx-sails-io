@@ -25,7 +25,7 @@ export class SailsResource<T extends SailsModelInterface> {
 
   constructor( public sails: Sails, public modelClass: new() => T) {}
 
-  find( params: ResourceFindParams<T> = new ResourceFindParams<T>(), meta = false ): Observable<T[] | ResponseMeta<T[]>> {
+  find( params: ResourceFindParams<T> = new ResourceFindParams<T>(), meta: boolean = false ): Observable<T[] | ResponseMeta<T[]>> {
     return new SailsQuery<T>(this.sails, this.modelClass )
       .setRequestCriteria( params.filter || this.filter )
       .setLimit( params.limit || this.limit )

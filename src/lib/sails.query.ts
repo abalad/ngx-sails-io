@@ -23,16 +23,16 @@ export class SailsQuery<T extends SailsModelInterface> {
         this.model = new modelClass();
     }
 
-    public find( meta: boolean = false ): Observable<T[] | ResponseMeta<T[]> > {
+    public find( meta: boolean = false ): Observable<T[] | ResponseMeta<T[]>> {
         this.request.addParam('where', this.getRequestCriteria());
         return this.request.get(`/${this.model.getEndPoint()}`).pipe(
             map((res: SailsResponse) => {
                 if (res.isOk()) {
-                    if ( meta ) {
-                      return Object.defineProperty(res.getBody(), 'data', {
-                        writable: true,
-                        value: SailsModel.unserialize<T>(this.modelClass, res.getData()) as T[]
-                      });
+                    if (meta) {
+                        return Object.defineProperty(res.getBody(), 'data', {
+                            writable: true,
+                            value: SailsModel.unserialize<T>(this.modelClass, res.getData()) as T[]
+                        });
                     }
                     return SailsModel.unserialize<T>(this.modelClass, res.getData()) as T[];
                 }
@@ -41,7 +41,8 @@ export class SailsQuery<T extends SailsModelInterface> {
         );
     }
 
-    public findOne(id: string): Observable<T> {
+
+    public findOne(id: string): Observable<T>  {
         this.request.addParam('where', this.getRequestCriteria());
         return this.request.get(`/${this.model.getEndPoint()}/${id}`).pipe(
             map((res: SailsResponse) => {
