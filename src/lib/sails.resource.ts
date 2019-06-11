@@ -9,7 +9,6 @@ import { SailsModel } from './sails.model';
 import { SailsSubscription } from './sails.subscription';
 import { SailsEvent } from './sails.event';
 import { SailsIOClient } from './sails.io.client';
-import ResponseMeta = SailsIOClient.ResponseMeta;
 
 export class SailsResource<T extends SailsModelInterface> {
 
@@ -25,7 +24,9 @@ export class SailsResource<T extends SailsModelInterface> {
 
   constructor( public sails: Sails, public modelClass: new() => T) {}
 
-  find( params: ResourceFindParams<T> = new ResourceFindParams<T>(), meta: boolean = false ): Observable<T[] | ResponseMeta<T[]>> {
+  find(
+      params: ResourceFindParams<T> = new ResourceFindParams<T>(),
+      meta: boolean = false ): Observable<T[] | SailsIOClient.ResponseMeta<T[]>> {
     return new SailsQuery<T>(this.sails, this.modelClass )
       .setRequestCriteria( params.filter || this.filter )
       .setLimit( params.limit || this.limit )

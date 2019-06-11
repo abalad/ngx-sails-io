@@ -7,7 +7,6 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { SailsResponse } from './sails.response';
 import { SailsIOClient } from './sails.io.client';
-import ResponseMeta = SailsIOClient.ResponseMeta;
 
 export class SailsQuery<T extends SailsModelInterface> {
     private model: T;
@@ -23,7 +22,7 @@ export class SailsQuery<T extends SailsModelInterface> {
         this.model = new modelClass();
     }
 
-    public find( meta: boolean = false ): Observable<T[] | ResponseMeta<T[]>> {
+    public find( meta: boolean = false ): Observable<T[] | SailsIOClient.ResponseMeta<T[]>> {
         this.request.addParam('where', this.getRequestCriteria());
         return this.request.get(`/${this.model.getEndPoint()}`).pipe(
             map((res: SailsResponse) => {
