@@ -1,7 +1,7 @@
 import { filter, map } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 
-import { ResourceFindOneParams, ResourceFindParams } from './sails.resource.params';
+import { ResourceCreateParams, ResourceFindOneParams, ResourceFindParams } from './sails.resource.params';
 import { SailsModelInterface } from './sails.model.interface';
 import { Sails } from './sails';
 import { SailsQuery } from './sails.query';
@@ -42,7 +42,7 @@ export class SailsResource<T extends SailsModelInterface> {
       .findOne( ( entity as T).id || entity as string );
   }
 
-  create(entity: T, params: ResourceFindOneParams<T> = new ResourceFindOneParams<T>()): Observable<T> {
+  create(entity: T, params: ResourceCreateParams<T> = new ResourceCreateParams<T>()): Observable<T> {
     return new SailsQuery<T>(this.sails, this.modelClass )
       .setPopulation( ...params.population || this.population )
       .create( SailsModel.unserialize(this.modelClass, entity) as T );

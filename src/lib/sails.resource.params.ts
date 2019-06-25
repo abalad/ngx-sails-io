@@ -15,3 +15,7 @@ export class ResourceFindOneParams<T> {
   select?: string;
   omit?: string;
 }
+
+export class ResourceCreateParams<T> {
+    population?: string[];
+}
