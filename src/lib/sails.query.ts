@@ -12,6 +12,7 @@ export class SailsQuery<T extends SailsModelInterface> {
     private model: T;
     private request: SailsRequest;
     private criteria: RequestCriteria;
+    private subCriteria: RequestCriteria;
     private errorMsg = `[SailsSocketIO]: the data is not an instance of ${this.modelClass.name}.
         You could SailsModel.unserialize(${this.modelClass.name}, data) as ${this.modelClass.name}[] (Array of Models), Or
         SailsModel.unserialize(${this.modelClass.name}, data) as ${this.modelClass.name} (Single Models)
@@ -24,6 +25,8 @@ export class SailsQuery<T extends SailsModelInterface> {
 
     public find( meta: boolean = false ): Observable<T[] | SailsIOClient.ResponseMeta<T[]>> {
         this.request.addParam('where', this.getRequestCriteria());
+        this.request.addParam('subcriteria', this.getSubCriteria());
+
         return this.request.get(`/${this.model.getEndPoint()}`).pipe(
             map((res: SailsResponse) => {
                 if (res.isOk()) {
@@ -43,6 +46,8 @@ export class SailsQuery<T extends SailsModelInterface> {
 
     public findOne(id: string): Observable<T>  {
         this.request.addParam('where', this.getRequestCriteria());
+        this.request.addParam('subcriteria', this.getSubCriteria());
+
         return this.request.get(`/${this.model.getEndPoint()}/${id}`).pipe(
             map((res: SailsResponse) => {
                 if (res.isOk()) {
@@ -152,6 +157,8 @@ export class SailsQuery<T extends SailsModelInterface> {
       const assosiationModelClass = association;
 
       this.request.addParam('where', this.getRequestCriteria());
+      this.request.addParam('subcriteria', this.getSubCriteria());
+
       return this.request.get(`/${this.model.getEndPoint()}/${id}/${associationModel.getEndPoint()}`).pipe(
         map((res: SailsResponse) => {
           if (res.isOk()) {
@@ -208,6 +215,11 @@ export class SailsQuery<T extends SailsModelInterface> {
       return this;
     }
 
+    public setSubCriteria(criteria: RequestCriteria = null): this {
+      this.subCriteria = criteria;
+      return this;
+    }
+
     public setRequestCriteria(criteria: RequestCriteria = null): this {
         this.criteria = criteria;
         return this;
@@ -218,6 +230,10 @@ export class SailsQuery<T extends SailsModelInterface> {
         this.request.addParam('count', count);
       }
       return this;
+    }
+
+    private getSubCriteria(): RequestCriteria {
+      return this.subCriteria || new RequestCriteria();
     }
 
     private getRequestCriteria(): RequestCriteria {

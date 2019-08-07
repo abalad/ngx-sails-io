@@ -2,6 +2,7 @@ import { RequestCriteria } from './sails.request.criteria';
 
 export class ResourceFindParams<T> {
   filter?: RequestCriteria = null;
+  subCriteria?: RequestCriteria = null;
   limit?: number;
   skip?: number;
   sort?: string;

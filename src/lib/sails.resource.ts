@@ -22,12 +22,15 @@ export class SailsResource<T extends SailsModelInterface> {
 
   public filter = null;
 
+  public subCriteria = null;
+
   constructor( public sails: Sails, public modelClass: new() => T) {}
 
   find(
       params: ResourceFindParams<T> = new ResourceFindParams<T>(),
       meta: boolean = false ): Observable<T[] | SailsIOClient.ResponseMeta<T[]>> {
     return new SailsQuery<T>(this.sails, this.modelClass )
+      .setSubCriteria( params.subCriteria || this.subCriteria )
       .setRequestCriteria( params.filter || this.filter )
       .setLimit( params.limit || this.limit )
       .setSkip( params.skip || this.skip )
