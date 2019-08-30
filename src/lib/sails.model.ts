@@ -4,7 +4,7 @@ import { Endpoint } from './sails.decorator.endpoint';
 import { isObject } from './utils';
 
 @Endpoint()
-export abstract class SailsModel implements SailsModelInterface {
+export abstract class SailsModel implements Partial<SailsModelInterface> {
     @Property() id = '';
     @Property({ type: Date }) createdAt: Date;
     @Property({ type: Date }) updatedAt: Date;
@@ -54,7 +54,7 @@ export abstract class SailsModel implements SailsModelInterface {
         throw new Error('SailsModel.unserialize requires a data parameter of either a Literal Object or an Array of Literal Objects');
     }
 
-    getEndPoint(): string {
+    getEndPoint?(): string {
       return this.getEndPoint();
     }
 
