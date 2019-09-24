@@ -42,7 +42,7 @@ export class SailsResource<T extends SailsModelInterface> {
   findOne(entity: T | string, params: ResourceFindOneParams<T> = new ResourceFindOneParams<T>()) {
     return new SailsQuery<T>(this.sails, this.modelClass)
       .setPopulation( ...params.population || this.population )
-      .findOne( ( entity as T) ? ( entity as T).id : entity as string );
+      .findOne( ( entity as T).hasOwnProperty('id') ? ( entity as T).id : entity as string );
   }
 
   create(entity: T, params: ResourceCreateParams<T> = new ResourceCreateParams<T>()): Observable<T> {
