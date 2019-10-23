@@ -5,7 +5,7 @@ import { isObject } from './utils';
 
 @Endpoint()
 export abstract class SailsModel implements Partial<SailsModelInterface> {
-    @Property() id = '';
+    @Property() id = null;
     @Property({ type: Date }) createdAt: Date;
     @Property({ type: Date }) updatedAt: Date;
 
