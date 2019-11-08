@@ -23,6 +23,8 @@ export class SailsResource<T extends SailsModelInterface> {
   public filter = null;
 
   public subCriteria = null;
+  
+  public headers: SailsIOClient.Headers = {};
 
   constructor( public sails: Sails, public modelClass: new() => T) {}
 
@@ -36,15 +38,16 @@ export class SailsResource<T extends SailsModelInterface> {
       .setSkip( params.skip || this.skip )
       .setPopulation( ...params.population || this.population )
       .setSort( params.sort || this.sort )
-      .find( meta );
+      .find( meta, this.headers );
   }
 
   findOne(entity: T | string, params: ResourceFindOneParams<T> = new ResourceFindOneParams<T>()) {
     return new SailsQuery<T>(this.sails, this.modelClass)
       .setPopulation( ...params.population || this.population )
-      .findOne( ( entity as T).hasOwnProperty('id') ? ( entity as T).id : entity as string );
+      .findOne( (( entity as T).hasOwnProperty('id') ? ( entity as T).id : entity as string), this.headers );
   }
 
+  
   create(entity: T, params: ResourceCreateParams<T> = new ResourceCreateParams<T>()): Observable<T> {
     return new SailsQuery<T>(this.sails, this.modelClass )
       .setPopulation( ...params.population || this.population )
@@ -56,7 +59,7 @@ export class SailsResource<T extends SailsModelInterface> {
                                      association: new() => U = null): Observable<T> {
     return new SailsQuery<T>(this.sails, this.modelClass)
         .setPopulation( ...params.population || this.population )
-        .add( entity.id, entityFK.id, association );
+        .add( entity.id, entityFK.id, association);
   }
 
   update(entity: T, params: ResourceFindOneParams<T> = new ResourceFindOneParams<T>()): Observable<T> {

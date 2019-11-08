@@ -23,11 +23,10 @@ export class SailsQuery<T extends SailsModelInterface> {
         this.model = new modelClass();
     }
 
-    public find( meta: boolean = false ): Observable<T[] | SailsIOClient.ResponseMeta<T[]>> {
+    public find( meta: boolean = false, headers?: SailsIOClient.Headers ): Observable<T[] | SailsIOClient.ResponseMeta<T[]>> {
         this.request.addParam('where', this.getRequestCriteria());
         this.request.addParam('subcriteria', this.getSubCriteria());
-
-        return this.request.get(`/${this.model.getEndPoint()}`).pipe(
+        return this.request.get(`/${this.model.getEndPoint()}`, { },  headers).pipe(
             map((res: SailsResponse) => {
                 if (res.isOk()) {
                     if (meta) {
@@ -44,11 +43,11 @@ export class SailsQuery<T extends SailsModelInterface> {
     }
 
 
-    public findOne(id: string): Observable<T>  {
+    public findOne(id: string, headers?: SailsIOClient.Headers): Observable<T>  {
         this.request.addParam('where', this.getRequestCriteria());
         this.request.addParam('subcriteria', this.getSubCriteria());
 
-        return this.request.get(`/${this.model.getEndPoint()}/${id}`).pipe(
+        return this.request.get(`/${this.model.getEndPoint()}/${id}`, { }, headers).pipe(
             map((res: SailsResponse) => {
                 if (res.isOk()) {
                     return SailsModel.unserialize<T>(this.modelClass, res.getData()) as T;
