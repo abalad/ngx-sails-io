@@ -23,7 +23,7 @@ export class SailsResource<T extends SailsModelInterface> {
   public filter = null;
 
   public subCriteria = null;
-  
+
   public headers: SailsIOClient.Headers = {};
 
   constructor( public sails: Sails, public modelClass: new() => T) {}
@@ -47,7 +47,7 @@ export class SailsResource<T extends SailsModelInterface> {
       .findOne( (( entity as T).hasOwnProperty('id') ? ( entity as T).id : entity as string), this.headers );
   }
 
-  
+
   create(entity: T, params: ResourceCreateParams<T> = new ResourceCreateParams<T>()): Observable<T> {
     return new SailsQuery<T>(this.sails, this.modelClass )
       .setPopulation( ...params.population || this.population )
