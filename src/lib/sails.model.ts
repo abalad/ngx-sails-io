@@ -5,9 +5,9 @@ import { isObject } from './utils';
 
 @Endpoint()
 export abstract class SailsModel implements Partial<SailsModelInterface> {
-    @Property() id = null;
-    @Property({ type: Date }) createdAt: Date;
-    @Property({ type: Date }) updatedAt: Date;
+    @Property() id? = null;
+    @Property({ type: Date }) createdAt?: Date;
+    @Property({ type: Date }) updatedAt?: Date;
 
     static serialize<U extends SailsModelInterface>(model: U): U {
         const recr = (obj) => {

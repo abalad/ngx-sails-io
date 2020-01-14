@@ -23,11 +23,11 @@ export class RequestCriteria {
 
     public whereNotEqualTo(key: string, value: string): RequestCriteria {
         if (isUndefined(this.criteria[key]) || isString(this.criteria[key])) {
-            this.criteria[key] = { '!': value };
+            this.criteria[key] = { '!=': value };
             return this;
         }
         if (isUndefined(this.criteria[key]['!'])) {
-            this.criteria[key]['!'] = value;
+            this.criteria[key]['!='] = value;
             return this;
         }
         throw new Error('DuplicateError: ! clause, use whereNotIn instead');
