@@ -5,7 +5,7 @@ import { SailsInterceptorConstructor } from './sails.interceptor';
 
 @NgModule()
 export class SailsModule {
-    static forRoot(options: SailsOptions, interceptors: SailsInterceptorConstructor[] = []): ModuleWithProviders {
+    static forRoot(options: SailsOptions, interceptors: SailsInterceptorConstructor[] = []): ModuleWithProviders<SailsModule> {
         return {
             ngModule: SailsModule,
             providers: [

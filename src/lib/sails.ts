@@ -2,7 +2,7 @@ import SailsIO from 'sails.io.js';
 import * as SocketIO from 'socket.io-client';
 import { SailsResponse } from './sails.response';
 import { SailsConfig } from './sails.config';
-import { Inject, InjectionToken, Injector } from '@angular/core';
+import { Inject, Injectable, InjectionToken, Injector } from '@angular/core';
 import { SailsIOClient } from './sails.io.client';
 import { SailsInterceptorConstructor, SailsInterceptorInterface } from './sails.interceptor';
 import { SailsInterceptorHandler, SailsInterceptorHandlerInterface } from './sails.interceptor.handler';
@@ -31,6 +31,7 @@ export const SailsListener = {
     CONNECT_TIMEOUT: 'connect_timeout',
 };
 
+@Injectable()
 export class Sails implements SailsInterceptorInterface, SailsInterceptorHandlerInterface {
     private Socket: SailsIOClient.Socket;
     private Config: SailsConfig;
