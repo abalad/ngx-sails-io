@@ -4,7 +4,24 @@ export class RequestCriteria {
 
     private criteria: object = {};
 
+    private andCriteria: object = {};
+
     private orCriteria: object = {};
+
+    public and(): RequestCriteria {
+        if (isUndefined(this.andCriteria['and'])) {
+            this.andCriteria['and'] = [this.criteria];
+            this.criteria = {};
+            return this;
+        }
+        if (Array.isArray(this.andCriteria['and'])) {
+            this.andCriteria['and'].push(this.criteria);
+        } else if (isObject(this.criteria['and'])) {
+            this.andCriteria['and'] = [this.criteria];
+        }
+        this.criteria = {};
+        return this;
+    }
 
     public or(): RequestCriteria {
         if (isUndefined(this.orCriteria['or'])) {
@@ -177,6 +194,13 @@ export class RequestCriteria {
       if (!isEmptyObject(this.orCriteria)) {
         if (Array.isArray(this.orCriteria['or'])) {
           this.orCriteria['or'].push(this.criteria);
+        }
+        return stringify(this.orCriteria);
+      }
+
+      if (!isEmptyObject(this.andCriteria)) {
+        if (Array.isArray(this.andCriteria['and'])) {
+          this.andCriteria['and'].push(this.criteria);
         }
         return stringify(this.orCriteria);
       }
