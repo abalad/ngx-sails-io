@@ -186,10 +186,9 @@ export class RequestCriteria {
 
 
     private build(): string {
-      if (isEmptyObject(this.criteria)) {
-        return '';
-      }
+
       const stringify = criteria => JSON.stringify(criteria);
+
 
       if (!isEmptyObject(this.orCriteria)) {
         if (Array.isArray(this.orCriteria['or'])) {
@@ -202,7 +201,11 @@ export class RequestCriteria {
         if (Array.isArray(this.andCriteria['and'])) {
           this.andCriteria['and'].push(this.criteria);
         }
-        return stringify(this.orCriteria);
+        return stringify(this.andCriteria);
+      }
+
+      if (isEmptyObject(this.criteria)) {
+        return '';
       }
       return stringify(this.criteria);
     }
