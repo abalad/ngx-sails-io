@@ -27,17 +27,24 @@ export class SailsQuery<T extends SailsModelInterface> {
         this.request.addParam('where', this.getRequestCriteria());
         this.request.addParam('subcriteria', this.getSubCriteria());
         return this.request.get(`/${this.model.getEndPoint()}`, { },  headers).pipe(
-            map((res: SailsResponse) => {
-                if (res.isOk()) {
+            map((response: SailsResponse) => {
+                if (response.isOk()) {
                     if (meta) {
-                        return Object.defineProperty(res.getBody(), 'data', {
+                        return Object.defineProperty(response.getBody(), 'data', {
                             writable: true,
-                            value: SailsModel.unserialize<T>(this.modelClass, res.getData()) as T[]
+                            value: SailsModel.unserialize<T>(this.modelClass, response.getData()) as T[]
                         });
                     }
-                    return SailsModel.unserialize<T>(this.modelClass, res.getData()) as T[];
+                    return SailsModel.unserialize<T>(this.modelClass, response.getData()) as T[];
+                } else {
+                  if (meta && response.getBody().meta) {
+                    throw {
+                      ...response.getData(),
+                      meta: response.getBody().meta
+                    };
+                  }
+                  throw response.getData();
                 }
-                throw res;
             })
         );
     }
@@ -52,7 +59,7 @@ export class SailsQuery<T extends SailsModelInterface> {
                 if (res.isOk()) {
                     return SailsModel.unserialize<T>(this.modelClass, res.getData()) as T;
                 }
-                throw res;
+               throw res.getData();
             })
         );
     }
@@ -69,7 +76,7 @@ export class SailsQuery<T extends SailsModelInterface> {
                 if (res.isOk()) {
                     return SailsModel.unserialize<T>(this.modelClass, res.getData()) as T;
                 }
-                throw res;
+                throw res.getData();
             })
         );
     }
@@ -83,7 +90,7 @@ export class SailsQuery<T extends SailsModelInterface> {
                 if (res.isOk()) {
                     return SailsModel.unserialize<T>(this.modelClass, res.getData()) as T;
                 }
-                throw res;
+                throw res.getData();
             })
         );
     }
@@ -104,7 +111,7 @@ export class SailsQuery<T extends SailsModelInterface> {
                 if (res.isOk()) {
                     return SailsModel.unserialize<T>(this.modelClass, res.getData()) as T;
                 }
-                throw res;
+                throw res.getData();
             })
         );
     }
@@ -122,7 +129,7 @@ export class SailsQuery<T extends SailsModelInterface> {
                 if (res.isOk()) {
                     return SailsModel.unserialize<T>(this.modelClass, res.getData()) as T;
                 }
-                throw res;
+                throw res.getData();
             })
         );
     }
@@ -133,7 +140,7 @@ export class SailsQuery<T extends SailsModelInterface> {
                 if (res.isOk()) {
                     return SailsModel.unserialize<T>(this.modelClass, res.getData()) as T;
                 }
-                throw res;
+                throw res.getData();
             })
         );
     }
@@ -146,7 +153,7 @@ export class SailsQuery<T extends SailsModelInterface> {
                 if (res.isOk()) {
                     return SailsModel.unserialize<T>(this.modelClass, res.getData()) as T;
                 }
-                throw res;
+                throw res.getData();
             })
         );
     }
@@ -163,7 +170,7 @@ export class SailsQuery<T extends SailsModelInterface> {
           if (res.isOk()) {
             return SailsModel.unserialize<U>(assosiationModelClass, res.getData()) as U[];
           }
-          throw res;
+          throw res.getData();
         })
       );
     }
@@ -181,7 +188,7 @@ export class SailsQuery<T extends SailsModelInterface> {
           if (res.isOk()) {
             return SailsModel.unserialize<T>(this.modelClass, res.getData()) as T;
           }
-          throw res;
+          throw res.getData();
         })
       );
     }
