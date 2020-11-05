@@ -3,8 +3,8 @@ import { SailsModel } from './sails.model';
 import { SailsRequest } from './sails.request';
 import { SailsModelInterface } from './sails.model.interface';
 import { RequestCriteria } from './sails.request.criteria';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { SailsResponse } from './sails.response';
 import { SailsIOClient } from './sails.io.client';
 
@@ -45,6 +45,12 @@ export class SailsQuery<T extends SailsModelInterface> {
                   }
                   throw response.getData();
                 }
+            }),
+            catchError( response => {
+              return throwError({
+                ...response.getData(),
+                meta: response.getBody().meta
+              });
             })
         );
     }
