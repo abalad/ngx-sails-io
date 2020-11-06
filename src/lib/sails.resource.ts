@@ -68,7 +68,8 @@ export class SailsResource<T extends SailsModelInterface> {
       .update( entity.id, entity );
   }
 
-  replace<U extends SailsModelInterface>(entity: T, association: new() => U = null, params: ResourceReplaceParams<T> = new ResourceReplaceParams<T>()): Observable<T> {
+  replace<U extends SailsModelInterface>(
+    entity: T, association: new() => U = null, params: ResourceReplaceParams<T> = new ResourceReplaceParams<T>()): Observable<T> {
     return new SailsQuery<T>(this.sails, this.modelClass)
           .setPopulation( ...params.population || this.population )
           .replace( entity.id, entity, association );
