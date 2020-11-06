@@ -20,3 +20,7 @@ export class ResourceFindOneParams<T> {
 export class ResourceCreateParams<T> {
     population?: string[];
 }
+
+export class ResourceReplaceParams<T> {
+    population?: string[];
+}

@@ -1,7 +1,7 @@
 import { filter, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
-import { ResourceCreateParams, ResourceFindOneParams, ResourceFindParams } from './sails.resource.params';
+import { ResourceCreateParams, ResourceFindOneParams, ResourceFindParams, ResourceReplaceParams } from './sails.resource.params';
 import { SailsModelInterface } from './sails.model.interface';
 import { Sails } from './sails';
 import { SailsQuery } from './sails.query';
@@ -68,9 +68,10 @@ export class SailsResource<T extends SailsModelInterface> {
       .update( entity.id, entity );
   }
 
-  replace<U extends SailsModelInterface>(entity: T, association: new() => U = null): Observable<T> {
+  replace<U extends SailsModelInterface>(entity: T, association: new() => U = null, params: ResourceReplaceParams<T> = new ResourceReplaceParams<T>()): Observable<T> {
     return new SailsQuery<T>(this.sails, this.modelClass)
-        .replace( entity.id, entity, association );
+          .setPopulation( ...params.population || this.population )
+          .replace( entity.id, entity, association );
   }
 
   destroy( entity: T ) {
