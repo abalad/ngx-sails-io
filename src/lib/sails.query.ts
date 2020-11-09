@@ -66,6 +66,12 @@ export class SailsQuery<T extends SailsModelInterface> {
                     return SailsModel.unserialize<T>(this.modelClass, res.getData()) as T;
                 }
                throw res.getData();
+            }),
+            catchError( response => {
+              return throwError({
+                ...response.getData(),
+                meta: response.getBody().meta
+              });
             })
         );
     }
@@ -83,6 +89,12 @@ export class SailsQuery<T extends SailsModelInterface> {
                     return SailsModel.unserialize<T>(this.modelClass, res.getData()) as T;
                 }
                 throw res.getData();
+            }),
+            catchError( response => {
+              return throwError({
+                ...response.getData(),
+                meta: response.getBody().meta
+              });
             })
         );
     }
@@ -97,6 +109,12 @@ export class SailsQuery<T extends SailsModelInterface> {
                     return SailsModel.unserialize<T>(this.modelClass, res.getData()) as T;
                 }
                 throw res.getData();
+            }),
+            catchError( response => {
+              return throwError({
+                ...response.getData(),
+                meta: response.getBody().meta
+              });
             })
         );
     }
@@ -118,6 +136,12 @@ export class SailsQuery<T extends SailsModelInterface> {
                     return SailsModel.unserialize<T>(this.modelClass, res.getData()) as T;
                 }
                 throw res.getData();
+            }),
+            catchError( response => {
+              return throwError({
+                ...response.getData(),
+                meta: response.getBody().meta
+              });
             })
         );
     }
@@ -136,6 +160,12 @@ export class SailsQuery<T extends SailsModelInterface> {
                     return SailsModel.unserialize<T>(this.modelClass, res.getData()) as T;
                 }
                 throw res.getData();
+            }),
+            catchError( response => {
+              return throwError({
+                ...response.getData(),
+                meta: response.getBody().meta
+              });
             })
         );
     }
@@ -147,6 +177,12 @@ export class SailsQuery<T extends SailsModelInterface> {
                     return SailsModel.unserialize<T>(this.modelClass, res.getData()) as T;
                 }
                 throw res.getData();
+            }),
+            catchError( response => {
+              return throwError({
+                ...response.getData(),
+                meta: response.getBody().meta
+              });
             })
         );
     }
@@ -160,6 +196,12 @@ export class SailsQuery<T extends SailsModelInterface> {
                     return SailsModel.unserialize<T>(this.modelClass, res.getData()) as T;
                 }
                 throw res.getData();
+            }),
+            catchError( response => {
+              return throwError({
+                ...response.getData(),
+                meta: response.getBody().meta
+              });
             })
         );
     }
@@ -177,6 +219,12 @@ export class SailsQuery<T extends SailsModelInterface> {
             return SailsModel.unserialize<U>(assosiationModelClass, res.getData()) as U[];
           }
           throw res.getData();
+        }),
+        catchError( response => {
+          return throwError({
+            ...response.getData(),
+            meta: response.getBody().meta
+          });
         })
       );
     }
@@ -195,6 +243,12 @@ export class SailsQuery<T extends SailsModelInterface> {
             return SailsModel.unserialize<T>(this.modelClass, res.getData()) as T;
           }
           throw res.getData();
+        }),
+        catchError( response => {
+          return throwError({
+            ...response.getData(),
+            meta: response.getBody().meta
+          });
         })
       );
     }
