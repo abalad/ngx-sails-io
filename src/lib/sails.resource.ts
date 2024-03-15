@@ -1,5 +1,5 @@
 import { filter, map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 
 import { ResourceCreateParams, ResourceFindOneParams, ResourceFindParams, ResourceReplaceParams } from './sails.resource.params';
 import { SailsModelInterface } from './sails.model.interface';
