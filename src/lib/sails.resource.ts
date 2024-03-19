@@ -1,5 +1,5 @@
 import { filter, map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 
 import { ResourceCreateParams, ResourceFindOneParams, ResourceFindParams, ResourceReplaceParams } from './sails.resource.params';
 import { SailsModelInterface } from './sails.model.interface';
@@ -60,6 +60,16 @@ export class SailsResource<T extends SailsModelInterface> {
     return new SailsQuery<T>(this.sails, this.modelClass)
         .setPopulation( ...params.population || this.population )
         .add( entity.id, entityFK.id, association);
+  }
+
+  addList(entities: T[], params: ResourceCreateParams<T> = new ResourceCreateParams<T>()): Observable<T[]> {
+    // Adiciona cada entidade individualmente
+    const addRequests = entities.map(entity =>
+        this.create(entity, params)
+    );
+
+    // Combine observables
+    return forkJoin(addRequests);
   }
 
   update(entity: T, params: ResourceFindOneParams<T> = new ResourceFindOneParams<T>()): Observable<T> {
