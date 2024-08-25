@@ -50,7 +50,7 @@ export declare namespace SailsIOClient {
     }
 
     interface SailsSocket extends Options {
-        connect: (url, opts) => Socket;
+        connect: (url: any, opts: any) => Socket;
     }
 
     interface RequestOptions {
@@ -65,7 +65,7 @@ export declare namespace SailsIOClient {
       meta?: object;
     }
 
-    type EventCallback = (response) => void;
+    type EventCallback = (response: any) => void;
 
     type ResponseCallback = (body: any, JWR: JWR.Response) => void;
 
@@ -77,8 +77,8 @@ export declare namespace SailsIOClient {
         isConnecting(): boolean;
         mightBeAboutToAutoConnect(): boolean;
         replay(): Socket;
-        on(eventName, callback: EventCallback): Socket;
-        off(eventName, callback: EventCallback): Socket;
+        on(eventName: string, callback: EventCallback): Socket;
+        off(eventName: string, callback: EventCallback): Socket;
         removeAllListeners(): Socket;
         get(url: string, data: any, callback: ResponseCallback): void;
         post(url: string, data: any, callback: ResponseCallback): void;
