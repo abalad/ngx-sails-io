@@ -17,8 +17,10 @@ export class SailsRequestOptions {
     clone(options: SailsRequestOptionsInterface): this {
         // Strip out undefined values
         for (const name in options) {
-            if (!this.options.hasOwnProperty(name) || !options[name]) {
-                delete options[name];
+            // @ts-ignore
+          if (!this.options.hasOwnProperty(name) || !options[name]) {
+                // @ts-ignore
+            delete options[name];
             }
         }
 
@@ -34,7 +36,8 @@ export class SailsRequestOptions {
 
     private toObject(map: Map<string, string> = new Map) {
         const obj = {};
-        map.forEach((v, k) => (obj[k] = v));
+        // @ts-ignore
+      map.forEach((v, k) => (obj[k] = v));
         return obj;
     }
 

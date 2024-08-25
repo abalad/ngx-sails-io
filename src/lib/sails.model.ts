@@ -5,14 +5,15 @@ import { isObject } from './utils';
 
 @Endpoint()
 export abstract class SailsModel implements Partial<SailsModelInterface> {
-    @Property() id ? = null;
+    @Property() id ?: string = null;
     @Property({ type: Date }) createdAt?: Date;
     @Property({ type: Date }) updatedAt?: Date;
 
     static serialize<U extends SailsModelInterface>(model: U): U {
-        const recr = (obj) => {
+        const recr = (obj: {} & U) => {
             for (const key in obj) {
               if (obj.hasOwnProperty(key)) {
+                // @ts-ignore
                 const prop: U = obj[key];
                 // Ignore NULL values
                 if (prop === null || typeof prop === 'function') {
@@ -21,14 +22,17 @@ export abstract class SailsModel implements Partial<SailsModelInterface> {
 
                 // Convert Property Models to their ID representations
                 if (prop && prop instanceof SailsModel && prop.id !== null) {
-                    obj[key] = prop.id;
+                    // @ts-ignore
+                  obj[key] = prop.id;
                 }
 
                 if (prop && prop instanceof SailsModel) {
-                    obj[key] = SailsModel.serialize(prop);
+                    // @ts-ignore
+                  obj[key] = SailsModel.serialize(prop);
                 }
 
                 if (prop && prop instanceof Array) {
+                  // @ts-ignore
                   obj[key] = prop.map(ob => {
                       if (ob instanceof SailsModel) {
                           return SailsModel.serialize(ob);
@@ -44,8 +48,9 @@ export abstract class SailsModel implements Partial<SailsModelInterface> {
         return recr(Object.assign({}, model));
     }
 
-    static unserialize<U extends SailsModelInterface>(modelClazz, data: U | U[]): U | U[] {
-        const callFn = (model) => unserialize<U>(modelClazz, model) as U;
+    // @ts-ignore
+  static unserialize<U extends SailsModelInterface>(modelClazz, data: U | U[]): U | U[] {
+        const callFn = (model: U) => unserialize<U>(modelClazz, model) as U;
         if (Array.isArray(data)) {
             return data.map(callFn);
         } else if (isObject(data)) {
